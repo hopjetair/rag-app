@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+langchain
+langchain-community
+sentence-transformers
+PyMuPDF
+psycopg2-binary
+pgvector
+boto3
+python-dotenv
