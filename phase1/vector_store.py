@@ -1,6 +1,9 @@
 from langchain_community.vectorstores.pgvector import PGVector
 import os
 
+from phase1.embeddings import get_embeddings
+
+
 def get_vector_store(documents, embeddings, connection_string, collection_name):
     return PGVector.from_documents(
         documents=documents,

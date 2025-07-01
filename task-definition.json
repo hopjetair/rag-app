@@ -1,40 +1,43 @@
 {
-    "family": "rag-api",
-    "executionRoleArn": "arn:aws:iam::109038807292:role/ecsTaskExecutionRole",
-    "networkMode": "awsvpc",
-    "requiresCompatibilities": ["FARGATE"],
-    "cpu": "512",
-    "memory": "1024",
-    "runtimePlatform": {
-      "cpuArchitecture": "X86_64",
-      "operatingSystemFamily": "LINUX"
-    },
-    "containerDefinitions": [
-      {
-        "name": "rag-api",
-        "image": "109038807292.dkr.ecr.ap-southeast-2.amazonaws.com/rag-api:latest",
-        "essential": true,
-        "portMappings": [
-          {
-            "containerPort": 8003,
-            "hostPort": 8003,
-            "protocol": "tcp",
-            "appProtocol": "http"
-          }
-        ],
-        "logConfiguration": {
-          "logDriver": "awslogs",
-          "options": {
-            "awslogs-group": "/ecs/rag-api",
-            "awslogs-create-group": "true",
-            "awslogs-region": "ap-southeast-2",
-            "awslogs-stream-prefix": "ecs"
-          }
-        },
-        "environment": [
-          {"name": "CONNECTION_STRING", "value": "postgresql://ppm:your_password@your-hopjetairline-db-host.ap-southeast-2.rds.amazonaws.com:5432/hopjetairline_db"},
-          {"name": "COLLECTION_NAME", "value": "airline_docs_pg"}
-        ]
-      }
-    ]
-  }
+  "family": "rag-api",
+  "executionRoleArn": "arn:aws:iam::109038807292:role/ecsTaskExecutionRole",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "512",
+  "memory": "1024",
+  "runtimePlatform": {
+    "cpuArchitecture": "X86_64",
+    "operatingSystemFamily": "LINUX"
+  },
+  "containerDefinitions": [
+    {
+      "name": "rag-api",
+      "image": "109038807292.dkr.ecr.ap-south-1.amazonaws.com/rag-api:latest",
+      "essential": true,
+      "portMappings": [
+        {
+          "containerPort": 8003,
+          "hostPort": 8003,
+          "protocol": "tcp",
+          "appProtocol": "http"
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/rag-api",
+          "awslogs-create-group": "true",
+          "awslogs-region": "ap-south-1",
+          "awslogs-stream-prefix": "ecs"
+        }
+      },
+      "environment": [
+        {"name": "CONNECTION_STRING", "value": "postgresql://ppm:your_password@your-hopjetairline-db-host.ap-south-1.rds.amazonaws.com:5432/hopjetairline_db"},
+        {"name": "COLLECTION_NAME", "value": "airline_docs_pg"}
+      ],
+      "secrets": [
+        {"name": "RDS_PASSWORD", "valueFrom": "arn:aws:secretsmanager:ap-south-1:109038807292:secret:your-secret-name:password::"}
+      ]
+    }
+  ]
+}
