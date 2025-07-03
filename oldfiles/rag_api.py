@@ -81,6 +81,10 @@ qa_chain = RetrievalQA.from_chain_type(
 )
 
 # === Endpoint ===
+@app.get("/health")
+async def health_check():
+    return {"status": "healthy"}
+
 @app.post("/ask", response_model=AnswerResponse)
 async def ask_question(request: QueryRequest):
     try:
