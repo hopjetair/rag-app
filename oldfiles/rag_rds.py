@@ -11,7 +11,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # === Connection Config ===
-RDS_HOST = "database-rag.cta8wggyqhhv.ap-south-1.rds.amazonaws.com"
+RDS_HOST = "database-rag.cta8wggyqhhv.ap-southeast-2.rds.amazonaws.com"
 RDS_USER = "ppm"
 RDS_PASSWORD = ""
 RDS_PORT = "5432"

@@ -44,7 +44,7 @@ The RAG application indexes a PDF document and allows users to query it via a Fa
   - S3
   - ECR
   - ECS/Fargate
-  - IAM (role: `arn:aws:iam::109038807292:role/GitHubActionsRole`)
+  - IAM (role: `arn:aws:iam::489582127457:role/GitHubActionsRole`)
   - Secrets Manager
 - **GitHub Account** with repository access
 
@@ -84,7 +84,7 @@ The RAG application indexes a PDF document and allows users to query it via a Fa
 
 ## S3 Setup
 
-    Create an S3 bucket (e.g., hopjetairline-rag-docs) in ap-south-1.
+    Create an S3 bucket (e.g., hopjetairline-rag-docs) in ap-southeast-2.
     Upload Airline_Regulations_v1.0.pdf to the bucket.
     Configure IAM permissions for the ecsTaskExecutionRole to access the bucket.
 
@@ -121,7 +121,7 @@ The RAG application indexes a PDF document and allows users to query it via a Fa
             USE_S3=true
             BUCKET_NAME=hopjetairline-rag-docs
             OBJECT_KEY=Airline_Regulations_v1.0.pdf
-            CONNECTION_STRING=postgresql://ppm:your_password@your-hopjetairline-db-host.ap-south-1.rds.amazonaws.com:5432/hopjetairline_db
+            CONNECTION_STRING=postgresql://ppm:your_password@your-hopjetairline-db-host.ap-southeast-2.rds.amazonaws.com:5432/hopjetairline_db
             COLLECTION_NAME=airline_docs_pg
         . Store RDS_PASSWORD in Secrets Manager.
     2. Trigger CI/CD:
@@ -174,9 +174,9 @@ The RAG application indexes a PDF document and allows users to query it via a Fa
     . Trigger: Push to main branch.
     . Steps:
         . Checkout code.
-        . Configure AWS credentials with OIDC (role: arn:aws:iam::109038807292:role/GitHubActionsRole).
+        . Configure AWS credentials with OIDC (role: arn:aws:iam::489582127457:role/GitHubActionsRole).
         . Login to ECR.
-        . Build and push Docker image to 109038807292.dkr.ecr.ap-south-1.amazonaws.com/rag-api.
+        . Build and push Docker image to 489582127457.dkr.ecr.ap-southeast-2.amazonaws.com/rag-api.
         . Register and update ECS task definition.
     . Permissions: id-token: write, contents: read.
 
