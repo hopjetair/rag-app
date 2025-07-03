@@ -1,4 +1,4 @@
-name: Build Test and Push Docker image to ECR
+name: RAG Api Build Test and Push Docker image to ECR
 
 on:
   # push:
