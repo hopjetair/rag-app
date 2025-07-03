@@ -19,7 +19,7 @@ load_dotenv()
 
 # === Constants ===
 EMBED_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
-LOCAL_PDF_PATH = "/Users/preethupallavim/Desktop/RAG/Airline_Regulations_v1.0.pdf"
+LOCAL_PDF_PATH = "./data/Airline_Regulations_v1.0.pdf" 
 CONNECTION_STRING = "postgresql://hopjetair:SecurePass123!@localhost:5432/hopjetairline_db" #"postgresql://ppm:airlinerag@localhost:5432/ragdb"
 COLLECTION_NAME = "airline_docs_pg"
 

@@ -16,8 +16,8 @@
       "essential": true,
       "portMappings": [
         {
-          "containerPort": 8003,
-          "hostPort": 8003,
+          "containerPort": 8080,
+          "hostPort": 8080,
           "protocol": "tcp",
           "appProtocol": "http"
         }

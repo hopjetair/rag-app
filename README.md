@@ -108,10 +108,10 @@ The RAG application indexes a PDF document and allows users to query it via a Fa
         3. Run Phase 2 (API):
             . Start the FastAPI server:
                 ```bash
-                uvicorn phase2.api:app --host 0.0.0.0 --port 8003
+                uvicorn phase2.api:app --host 0.0.0.0 --port 8080
             . Test endpoints:
-                .Health: curl http://localhost:8003/health
-                .Query: curl -X POST http://localhost:8003/ask -d '{"query": "What are the regulations?"}' -H "Content-Type: application/json"
+                .Health: curl http://localhost:8080/health
+                .Query: curl -X POST http://localhost:8080/ask -d '{"query": "What are the regulations?"}' -H "Content-Type: application/json"
 
 ## AWS Deployment
 
@@ -128,7 +128,7 @@ The RAG application indexes a PDF document and allows users to query it via a Fa
         . Push changes to the main branch to initiate the GitHub Actions workflow.
         . The pipeline builds the Docker image, pushes it to ECR, and deploys to Fargate.
     3. Access the API:
-        . Use the ALB DNS or public IP (e.g., http://54.252.165.253:8003/ask) after deployment.
+        . Use the ALB DNS or public IP (e.g., http://54.252.165.253:8080/ask) after deployment.
 
 ## Project Structure
 
