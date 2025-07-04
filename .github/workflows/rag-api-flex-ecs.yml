@@ -20,6 +20,10 @@ env:
   AWS_ROLE_ARN: arn:aws:iam::489582127457:role/GitHubActionsRole
   DEFAULT_IMAGE_URI: 489582127457.dkr.ecr.ap-southeast-2.amazonaws.com/rag-api
 
+permissions:
+  id-token: write # Required for OIDC
+  contents: read # Required to checkout code
+
 jobs:
   ecs:
     runs-on: ubuntu-latest
