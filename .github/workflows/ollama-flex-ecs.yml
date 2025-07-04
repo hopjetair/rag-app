@@ -1,4 +1,4 @@
-name: Deploy Model to ECS in a Flexible way
+name: Deploy Ollama to ECS in a Flexible way
 
 on:
   workflow_run:
