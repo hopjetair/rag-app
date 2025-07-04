@@ -1,42 +1,41 @@
 {
-  "family": "rag-api-task",
+  "family": "ollama-task",
   "taskRoleArn": "arn:aws:iam::489582127457:role/ecsTaskRole",
   "executionRoleArn": "arn:aws:iam::489582127457:role/ecsTaskExecutionRole",
   "networkMode": "awsvpc",
   "requiresCompatibilities": ["FARGATE"],
-  "cpu": "2048",
-  "memory": "4096",
+  "cpu": "4096",
+  "memory": "8192",
   "runtimePlatform": {
     "cpuArchitecture": "X86_64",
     "operatingSystemFamily": "LINUX"
   },
   "containerDefinitions": [
     {
-      "name": "rag-api-taskcontainer",
-      "image": "489582127457.dkr.ecr.ap-southeast-2.amazonaws.com/rag-api:latest",
+      "name": "ollama-taskcontainer",
+      "image": "489582127457.dkr.ecr.ap-southeast-2.amazonaws.com/ollama:latest",
       "essential": true,
       "portMappings": [
         {
-          "containerPort": 8080,
-          "hostPort": 8080,
-          "protocol": "tcp",
-          "appProtocol": "http"
+          "containerPort": 11434,
+          "hostPort": 11434,
+          "protocol": "tcp"
         }
       ],
       "healthCheck": {
         "command": [
           "CMD-SHELL",
-          "curl -f http://localhost:8080/health || exit 1"
+          "curl -f http://localhost:11434/api/tags || exit 1"
         ],
         "interval": 30,
-        "timeout": 10,
+        "timeout": 5,
         "retries": 3,
-        "startPeriod": 60
+        "startPeriod": 300
       },      
       "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
-          "awslogs-group": "/ecs/rag-api-task",
+          "awslogs-group": "/ecs/ollama-task",
           "awslogs-create-group": "true",
           "awslogs-region": "ap-southeast-2",
           "awslogs-stream-prefix": "ecs"

@@ -1,0 +1,90 @@
+name: Ollama Model Build and Push to ECR
+
+on:
+  # push:
+  #   branches:
+  #     - main
+  workflow_dispatch: # Allows manual execution
+
+env:
+  AWS_REGION: ap-southeast-2
+  ECR_REPOSITORY: ollama
+  AWS_ROLE_ARN: arn:aws:iam::489582127457:role/GitHubActionsRole
+  DOCKER_FILE: Dockerfile.ollama
+
+permissions:
+  id-token: write # Required for OIDC
+  contents: read # Required to checkout code
+
+jobs:
+  build-ollama:
+    runs-on: ubuntu-latest
+    outputs:
+      image: ${{ steps.build-image.outputs.image }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ env.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build Ollama Docker image
+        id: build-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        run: |
+          docker build -f  ${{ env.DOCKER_FILE}} -t $ECR_REGISTRY/$ECR_REPOSITORY .
+          echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:latest" >> $GITHUB_OUTPUT
+          echo "Built Ollama image: $ECR_REGISTRY/$ECR_REPOSITORY"
+
+      - name: Test Ollama container
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        run: |
+          echo "Starting Ollama container for testing..."
+          docker run -d -p 11434:11434 \
+            --name test-ollama $ECR_REGISTRY/$ECR_REPOSITORY
+
+          echo "Waiting for Ollama to be ready (this may take 2-3 minutes)..."
+          sleep 180  # Wait for model to download
+
+          echo "Checking Ollama logs..."
+          docker logs test-ollama
+
+          echo "Testing Ollama API..."
+          docker exec test-ollama curl -f http://localhost:11434/api/tags || exit 1
+
+          echo "Testing model availability..."
+          docker exec test-ollama curl -X POST http://localhost:11434/api/generate \
+            -H "Content-Type: application/json" \
+            -d '{"model": "mistral", "prompt": "Hello", "stream": false}' || exit 1
+
+          echo "Cleaning up test container..."
+          docker stop test-ollama
+          docker rm test-ollama
+
+      - name: Push image to Amazon ECR
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        run: |
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY
+          echo "Pushed Ollama image to ECR: $ECR_REGISTRY/$ECR_REPOSITORY
+
+      - name: Save image URI as artifact
+        run: |
+          echo "${{ steps.build-image.outputs.image }}" > ollama-image-uri.txt
+          echo "Saved Ollama image URI: $(cat ollama-image-uri.txt)"
+
+      - name: Upload image URI artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ollama-image-uri
+          path: ollama-image-uri.txt
+          retention-days: 7
